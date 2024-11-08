@@ -1,23 +1,13 @@
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import { getServerSession } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { AuthOptions } from "next-auth";
-import clientPromise from "./mongodb";
 
-export const authOptions: AuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  pages: {
-    signIn: "/login",
-  },
   callbacks: {
     session({ session, token }) {
       if (session.user) {
@@ -27,5 +17,3 @@ export const authOptions: AuthOptions = {
     },
   },
 };
-
-export const getAuthSession = () => getServerSession(authOptions);
